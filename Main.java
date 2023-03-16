@@ -14,7 +14,7 @@ public class Main {
      */
     static int emptyCells;
     /**
-     * Plateau de jeu
+     * Plateau de jeu (origine commençant à la case 0 de la line 0)
      */
     static char[][] board=new char[COL_SIZE][ROW_SIZE];
     /**
@@ -38,6 +38,10 @@ public class Main {
         for(int i=0;i<COL_SIZE;i++)
             Arrays.fill(board[i], '0');
     }
+
+    /**
+     * Affiche le tableau de jeu
+     */
     static void afficherPlateau(){
         for(int i=0;i<COL_SIZE;i++) {
             for (int j = 0; j < ROW_SIZE; j++) {
@@ -69,6 +73,10 @@ public class Main {
         return S;
     }
 
+    /**
+     * Gestion du jeu
+     * @return Numéro du gagnant (0 pour match nul, 1 pour joueur 1 et 2 pour joueur 2)
+     */
     public static int gestionTour(){
         /**
          * Gagnant (0 pour nul, 1 pour joueur 1 et 2 pour joueur 2)
@@ -119,6 +127,12 @@ public class Main {
         return winner;
     }
 
+    /**
+     * Détermine si l'ajout du jeton à un certaine position entraine la fin du jeu
+     * @param x Abscisse du jeton sur le plateau
+     * @param y Ordonnée du jeton sur le plateau
+     * @return Un booléen indiquant si le jeu est fini (true) ou non (false)
+     */
     public static boolean checkVictory(int x, int y){
         boolean S=false;
         char token=board[y][x];
@@ -157,6 +171,47 @@ public class Main {
                     break;
 
             S=total>=4;
+
+            if(!S){
+                // Tests diagonaux
+                // Diagonale NO-SE
+                total=1;
+                int diffNO=Math.min(x-leftLimit, y-upperLimit), diffSE=Math.min(rightLimit-x, lowerLimit-y);
+
+                for(int i=0;i<=diffNO;i++)
+                    if(board[y-i][x-i]==token&&(x-i)!=x&&(y-i)!=y)
+                        total++;
+                    else if(board[y-i][x-i]!=token)
+                        break;
+
+                for(int i=0;i<=diffSE;i++)
+                    if(board[y+i][x+i]==token&&(x+i)!=x&&(y+i)!=y)
+                        total++;
+                    else if(board[y+i][x+i]!=token)
+                        break;
+
+                S=total>=4;
+
+                if(!S){
+                    // Diagonale NE-SO
+                    total=1;
+                    int diffNE=Math.min(rightLimit-x, upperLimit-y), diffSO=Math.min(x-leftLimit, lowerLimit-y);
+
+                    for(int i=0;i<=diffNE;i++)
+                        if(board[y-i][x+i]==token&&(x+i)!=x&&(y-i)!=y)
+                            total++;
+                        else if(board[y-i][x+i]!=token)
+                            break;
+
+                    for(int i=0;i<=diffSO;i++)
+                        if(board[y+i][x-i]==token&&(x-i)!=x&&(y+i)!=y)
+                            total++;
+                        else if(board[y+i][x-i]!=token)
+                            break;
+
+                    S=total>=4;
+                }
+            }
         }
 
         return S;
