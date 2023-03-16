@@ -25,6 +25,9 @@ public class Main {
      * Jetons des joueurs (jeton_1 pour joueur 1, jeton_2 pour le 2)
      */
     static char jeton_1, jeton_2;
+    public enum Couleur{
+        BLACK, RED, GREEN, YELLOW, BLUE, PURPLE, CYAN, WHITE
+    }
     /**
      * Initialise le jeu
      */
@@ -45,7 +48,21 @@ public class Main {
     static void afficherPlateau(){
         for(int i=0;i<COL_SIZE;i++) {
             for (int j = 0; j < ROW_SIZE; j++) {
-                System.out.format("|%c|", board[i][j]);
+                changeColorText(Couleur.BLUE);
+                System.out.print("|");
+                Couleur couleurJeton=Couleur.WHITE;
+
+                if(board[i][j]==jeton_1){
+                    couleurJeton=Couleur.RED;
+                } else if (board[i][j]==jeton_2) {
+                    couleurJeton=Couleur.YELLOW;
+                }
+
+                changeColorText(couleurJeton);
+                System.out.print(board[i][j]);
+                changeColorText(Couleur.BLUE);
+                System.out.print("|");
+                resetCouleur();
             }
 
             System.out.println();
@@ -216,6 +233,37 @@ public class Main {
 
         return S;
     }
+
+    /**
+     * Change la couleur du texte
+     * @param c Nouvelle couleur
+     */
+    public static void changeColorText(Couleur c){
+        switch(c){
+            case BLACK: System.out.print("\u001B[30m");break;
+            case BLUE: System.out.print("\u001B[34m");break;
+            case CYAN: System.out.print("\u001B[36m");break;
+            case GREEN: System.out.print("\u001B[32m");break;
+            case PURPLE: System.out.print("\u001B[35m");break;
+            case RED: System.out.print("\u001B[31m");break;
+            case WHITE: System.out.print("\u001B[37m");break;
+            case YELLOW: System.out.print("\u001B[33m");break;
+            default:break;
+        }
+
+    }
+
+    /**
+     * Retour à la couleur défaut de la console
+     */
+    public static void resetCouleur(){
+        System.out.print("\u001B[0m");
+    }
+
+    /**
+     * Point d'entrée du programme
+     * @param args
+     */
     public static void main(String[] args) {
         Scanner lectureClavier=new Scanner(System.in);
         score_1=0;
